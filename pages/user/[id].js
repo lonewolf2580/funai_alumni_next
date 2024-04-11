@@ -89,7 +89,7 @@ const UserPage = () => {
     if (id) {
       fetchUserData(id);
     }
-  }, [id]);
+  }, [id, databaseID, userDataCollection, alumniDataCollection]);
 
   const handlePrint = () => {
     window.print();

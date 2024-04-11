@@ -106,7 +106,7 @@ const IndexPage = () => {
     };
 
     
-  }, []);
+  }, [databaseID, userDataCollection, alumniDataCollection]);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
