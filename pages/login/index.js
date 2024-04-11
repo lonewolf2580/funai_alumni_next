@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { account, ID } from "../appwrite/appwrite";
+import { useState, useEffect } from "react";
+import { account } from "../appwrite/appwrite";
 import styled from "@emotion/styled";
+import Link from "next/link"; // Import Link from Next.js
 
 const Container = styled.div`
   max-width: 400px;
@@ -20,13 +21,15 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
+  display: block;
+  width: 100%;
   padding: 10px 20px;
+  margin-bottom: 10px;
   background-color: #007bff;
   color: #fff;
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  margin-right: 10px;
   transition: background-color 0.3s ease;
 
   &:hover {
@@ -40,14 +43,23 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const user = await account.get(); // Check if there is an active session
+        // Check if the user has admin label
+        setLoggedInUser(user);
+      } catch (error) {
+        console.error('Error checking session:', error);
+      }
+    };
+
+    checkSession();
+  }, []);
+
   const login = async (email, password) => {
     const session = await account.createEmailSession(email, password);
     setLoggedInUser(await account.get());
-  };
-
-  const register = async () => {
-    await account.create(ID.unique(), email, password, name);
-    login(email, password);
   };
 
   const logout = async () => {
@@ -62,6 +74,13 @@ const LoginPage = () => {
         <Button type="button" onClick={logout}>
           Logout
         </Button>
+        <Link href="../">
+          <Button>View Record with Details</Button>
+        </Link>
+        
+        <Link href="/record">
+          <Button>Search Record By Faculty/Department</Button>
+        </Link>
       </Container>
     );
   }
@@ -82,18 +101,18 @@ const LoginPage = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Input
+        {/* <Input
           type="text"
           placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-        />
+        /> */}
         <Button type="button" onClick={() => login(email, password)}>
           Login
         </Button>
-        <Button type="button" onClick={register}>
+        {/* <Button type="button" onClick={register}>
           Register
-        </Button>
+        </Button> */}
       </form>
     </Container>
   );

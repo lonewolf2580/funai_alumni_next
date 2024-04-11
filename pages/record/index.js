@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styled from '@emotion/styled';
-import { account, databases, Query } from "./appwrite/appwrite";
+import { account, databases, Query } from "../appwrite/appwrite";
 
 const Container = styled.div`
   max-width: 800px;
@@ -95,7 +95,7 @@ const IndexPage = () => {
       try {
         let promise = databases.listDocuments(
           databaseID,
-          userDataCollection,
+          alumniDataCollection,
         );
         promise.then((response)=> {
             setStudents(response.documents);
@@ -105,6 +105,7 @@ const IndexPage = () => {
       }
     };
 
+    
   }, []);
 
   const handleSearch = (e) => {
@@ -113,10 +114,10 @@ const IndexPage = () => {
   
 
   const filteredStudents = students.filter((student) =>
-    student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     student.regNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.userId.toLowerCase().includes(searchTerm.toLowerCase())
+    student.faculty.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.department.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handlePrint = () => {
@@ -125,19 +126,19 @@ const IndexPage = () => {
 
   return (
     <Container>
-      <h1 style={{ marginBottom: '20px' }}>Alumni Data Table</h1>
+      <h1 style={{ marginBottom: '20px' }}>Student Data</h1>
       <Input
         type="text"
-        placeholder="Search by Name, Reg Number, Email"
+        placeholder="Search by Name, Reg Number, Faculty, or Department"
         value={searchTerm}
         onChange={handleSearch}
       />
       <Button onClick={handlePrint} style={{ marginLeft: '20px' }}>
         Print List
       </Button>
-      <Link href="/record">
+      <Link href="../">
         <Button style={{ marginLeft: '20px' }}>
-          View Records By Faculty/Department
+          Back to Records with View Details Option
         </Button>
       </Link>
       <Table>
@@ -145,23 +146,23 @@ const IndexPage = () => {
           <tr>
             <TableHeader>Full Name</TableHeader>
             <TableHeader>Reg Number</TableHeader>
-            <TableHeader>Email</TableHeader>
-            {/* <TableHeader>Department</TableHeader> */}
-            <TableHeader>Actions</TableHeader>
+            <TableHeader>Faculty</TableHeader>
+            <TableHeader>Department</TableHeader>
+            {/* <TableHeader>Actions</TableHeader> */}
           </tr>
         </thead>
         <tbody>
           {filteredStudents.map((student) => (
             <tr key={student.id}>
-              <TableCell>{student.name}</TableCell>
+              <TableCell>{student.fullName}</TableCell>
               <TableCell>{student.regNumber}</TableCell>
-              <TableCell>{student.email}</TableCell>
-              {/* <TableCell>{student.department}</TableCell> */}
-              <TableCell>
-                <Link href={`/user/${student.userId}`}>
+              <TableCell>{student.faculty}</TableCell>
+              <TableCell>{student.department}</TableCell>
+              {/* <TableCell>
+                <Link href={`/user/${student.regNumber}`}>
                   <Button>View Details</Button>
                 </Link>
-              </TableCell>
+              </TableCell> */}
             </tr>
           ))}
         </tbody>
