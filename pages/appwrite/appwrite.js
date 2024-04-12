@@ -12,3 +12,12 @@ export const storage = new Storage(client);
 
 export const account = new Account(client);
 export { ID, Query } from 'appwrite';
+
+export default function appwritePage() {
+    return (
+        <div>
+            Appwrite Config
+        </div>
+    );
+}
+
