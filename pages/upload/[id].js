@@ -69,7 +69,7 @@ const Upload = () => {
   let databaseID = "65cdbcb4a423e21700fb";
   let userDataCollection = "65cdbce6a5676da43af8";
   let alumniDataCollection = "65d1c871ec47230031e2";
-  const bucketID = "65d30c51035dce914807";
+  const bucketID = "661908b8a46d76ab984a";
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -113,14 +113,15 @@ const Upload = () => {
                   {
                     "passport_photo" : photo,
                   }
-                )
+                ).then(()=>{
+                  console.log("Document Updated")
+                  router.push(`../user/${id}`);
+                })
               })
-              console.log("Document Updated")
           })
           }, function (error) {
               console.log(error); // Failure
         });
-        router.push(`../user/${id}`);
       } else if (selectedOption === 'portrait') {
         await storage.createFile(
           bucketID,
@@ -153,14 +154,17 @@ const Upload = () => {
                   {
                     "portrait" : photo,
                   }
-                )
+                ).then(()=>{
+                  console.log("Document Updated")
+                  router.push(`../user/${id}`);
+                })
               })
-              console.log("Document Updated")
+              
           })
           }, function (error) {
               console.log(error); // Failure
         });
-        router.push(`../user/${id}`);
+        
       } else {
         alert('Please select an option');
       }
