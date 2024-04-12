@@ -78,7 +78,7 @@ const UserPage = () => {
             );
             promise2.then((res)=>{
               setUserData(res.documents[0])
-              setPassport(`https://cloud.appwrite.io/v1/storage/buckets/661908b8a46d76ab984a/files/${res.documents[0].passport_photo ? res.documents[0].passport_photo : '65df049e10c86b9d72a6'}/view?project=65cdbc3b42063b794d4e&mode=admin}`)
+              setPassport(`https://cloud.appwrite.io/v1/storage/buckets/661908b8a46d76ab984a/files/${res.documents[0].passport_photo ? res.documents[0].passport_photo : '66190a8e7c091182a0bf'}/view?project=65cdbc3b42063b794d4e&mode=admin}`)
             })
         })
       } catch (error) {
