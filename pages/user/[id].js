@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import styled from '@emotion/styled';
 import { databases, Query } from "../appwrite/appwrite";
 
@@ -78,7 +79,7 @@ const UserPage = () => {
             );
             promise2.then((res)=>{
               setUserData(res.documents[0])
-              setPassport(`https://cloud.appwrite.io/v1/storage/buckets/661908b8a46d76ab984a/files/${res.documents[0].passport_photo ? res.documents[0].passport_photo : '66190a8e7c091182a0bf'}/view?project=65cdbc3b42063b794d4e&mode=admin}`)
+              setPassport(`https://cloud.appwrite.io/v1/storage/buckets/661908b8a46d76ab984a/files/${res.documents[0].passport_photo ? res.documents[0].passport_photo : '66190a8e7c091182a0bf'}/view?project=65cdbc3b42063b794d4e&mode=admin`)
             })
         })
       } catch (error) {
@@ -177,6 +178,14 @@ const UserPage = () => {
         {/* Add more user details as needed */}
       </UserData>
       <PrintButton onClick={handlePrint}>Print</PrintButton>
+      {userData.portrait && (
+          <UserDetail>
+            <strong>Portrait:</strong> 
+            <Link target='_blank' href={`https://cloud.appwrite.io/v1/storage/buckets/661908b8a46d76ab984a/files/${userData.portrait}/view?project=65cdbc3b42063b794d4e&mode=admin`} passHref>
+                View Portrait
+            </Link>
+          </UserDetail>
+        )}
     </Container> :
     <Container>
       <Heading>Alumni Haven't Updated their Data</Heading>

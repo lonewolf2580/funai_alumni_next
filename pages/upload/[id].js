@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { v4 as uuidv4 } from 'uuid';
 import { ID, Query, databases, storage } from "../appwrite/appwrite";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 const Container = styled.div`
   max-width: 600px;
@@ -66,10 +67,17 @@ const Upload = () => {
   const [selectedOption, setSelectedOption] = useState('');
   const [photo, setPhoto] = useState('');
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [isClient, setIsClient] = useState(false); // Track if the component is rendered on the client
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   let databaseID = "65cdbcb4a423e21700fb";
   let userDataCollection = "65cdbce6a5676da43af8";
   let alumniDataCollection = "65d1c871ec47230031e2";
   const bucketID = "661908b8a46d76ab984a";
+
+  useEffect(() => {
+    setIsClient(true); // Set isClient to true when the component mounts on the client side
+  }, []);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -82,107 +90,82 @@ const Upload = () => {
     reader.readAsDataURL(file);
 
     if (selectedOption === 'passport') {
-        await storage.createFile(
-          bucketID,
-          ID.unique(),
-          file,
-        ).then(async function (response) {
-          setPhoto(response.$id)
-          console.log("File created in bucket")
-          await databases.listDocuments(
-            databaseID,
-            userDataCollection,
-            [
-                Query.equal('userId', id)
-            ]
-          ).then(async (response)=> {
-              console.log(response.documents[0].regNumber);
-              await databases.listDocuments(
-                databaseID,
-                alumniDataCollection,
-                [
-                    Query.equal('regNumber', response.documents[0].regNumber)
-                ]
-              ).then(async (res)=>{
-                console.log("Alumni deta retrieved")
-                const docID = res.documents[0].$id
-                await databases.updateDocument(
-                  databaseID,
-                  alumniDataCollection,
-                  docID,
-                  {
-                    "passport_photo" : photo,
-                  }
-                ).then(()=>{
-                  console.log("Document Updated")
-                  router.push(`../user/${id}`);
-                })
-              })
-          })
-          }, function (error) {
-              console.log(error); // Failure
-        });
-      } else if (selectedOption === 'portrait') {
-        await storage.createFile(
-          bucketID,
-          ID.unique(),
-          file,
-        ).then(async function (response) {
-          setPhoto(response.$id)
-          console.log("File created in bucket")
-          await databases.listDocuments(
-            databaseID,
-            userDataCollection,
-            [
-                Query.equal('userId', id)
-            ]
-          ).then(async (response)=> {
-              console.log(response.documents[0].regNumber);
-              await databases.listDocuments(
-                databaseID,
-                alumniDataCollection,
-                [
-                    Query.equal('regNumber', response.documents[0].regNumber)
-                ]
-              ).then(async (res)=>{
-                console.log("Alumni deta retrieved")
-                const docID = res.documents[0].$id
-                await databases.updateDocument(
-                  databaseID,
-                  alumniDataCollection,
-                  docID,
-                  {
-                    "portrait" : photo,
-                  }
-                ).then(()=>{
-                  console.log("Document Updated")
-                  router.push(`../user/${id}`);
-                })
-              })
-              
-          })
-          }, function (error) {
-              console.log(error); // Failure
-        });
-        
-      } else {
-        alert('Please select an option');
-      }
+      handlePassportUpload(file);
+    } else if (selectedOption === 'portrait') {
+      handlePortraitUpload(file);
+    } else {
+      setSnackbarMessage('Please select an option');
+      setSnackbarOpen(true);
+    }
   };
 
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value);
   };
 
-  const handleUpload = async (e) => {
-      
+  const handlePassportUpload = async (file) => {
+    await uploadFileAndUpdateDocument('passport_photo', file, 'Passport photo uploaded successfully');
+  };
+
+  const handlePortraitUpload = async (file) => {
+    await uploadFileAndUpdateDocument('portrait', file, 'Portrait uploaded successfully');
+  };
+
+  const uploadFileAndUpdateDocument = async (fieldName, file, successMessage) => {
+    await storage.createFile(
+      bucketID,
+      ID.unique(),
+      file,
+    ).then(async (response) => {
+      setPhoto(response.$id)
+      console.log("File created in bucket");
+      await databases.listDocuments(
+        databaseID,
+        userDataCollection,
+        [
+          Query.equal('userId', id)
+        ]
+      ).then(async (response) => {
+        await databases.listDocuments(
+          databaseID,
+          alumniDataCollection,
+          [
+            Query.equal('regNumber', response.documents[0].regNumber)
+          ]
+        ).then(async (res) => {
+          console.log(`Alumni data retrieved - ${res.documents[0].$id}`);
+          const docID = res.documents[0].$id.toString();
+          await databases.updateDocument(
+            databaseID,
+            alumniDataCollection,
+            docID,
+            {
+              [fieldName]: photo,
+            }
+          ).then(() => {
+            console.log("Document Updated")
+            // router.push(`../user/${id}`);
+          });
+        });
+      });
+      setSnackbarMessage(successMessage);
+      setSnackbarOpen(true);
+    }).catch((error) => {
+      console.log(error);
+      setSnackbarMessage('Error uploading file');
+      setSnackbarOpen(true);
+    });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   return (
     <Container>
       <h1>Image Upload</h1>
       {/* Conditionally render OptionSelect only on the client side */}
-      {typeof window !== 'undefined' && (
+      {isClient && (
         <OptionSelect id='uploader' value={selectedOption} onChange={handleOptionChange}>
           <OptionOption value="">Select Option</OptionOption>
           <OptionOption value="passport">Passport</OptionOption>
@@ -196,8 +179,13 @@ const Upload = () => {
           <UploadedImage src={uploadedImage} alt="Uploaded" />
         </ImageContainer>
       )}
-      <p>ID: {id}</p>
-      <UploadButton onClick={handleUpload}>Upload</UploadButton>
+      <p>Alumni ID: {id}</p>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="success">
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
+      {/* <UploadButton onClick={handleUpload}>Upload</UploadButton> */}
     </Container>
   );
 };
