@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { ID, Query, databases, storage } from "../appwrite/appwrite";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import Head from 'next/head';
 
 const Container = styled.div`
   max-width: 600px;
@@ -162,31 +163,36 @@ const Upload = () => {
   };
 
   return (
-    <Container>
-      <h1>Image Upload</h1>
-      {/* Conditionally render OptionSelect only on the client side */}
-      {isClient && (
-        <OptionSelect id='uploader' value={selectedOption} onChange={handleOptionChange}>
-          <OptionOption value="">Select Option</OptionOption>
-          <OptionOption value="passport">Passport</OptionOption>
-          <OptionOption value="portrait">Portrait</OptionOption>
-        </OptionSelect>
-      )}
-      <input type="file" onChange={handleImageUpload} style={{ display: 'none' }} id="uploadInput" accept="image/*" />
-      <SelectImageButton htmlFor="uploadInput">Select Image</SelectImageButton>
-      {uploadedImage && (
-        <ImageContainer>
-          <UploadedImage src={uploadedImage} alt="Uploaded" />
-        </ImageContainer>
-      )}
-      <p>Alumni ID: {id}</p>
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-        <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="success">
-          {snackbarMessage}
-        </MuiAlert>
-      </Snackbar>
-      {/* <UploadButton onClick={handleUpload}>Upload</UploadButton> */}
-    </Container>
+    <>
+      <Head>
+          <title>AE-FUNAI Alumni Image Upload</title>
+      </Head>
+      <Container>
+        <h1>Image Upload</h1>
+        {/* Conditionally render OptionSelect only on the client side */}
+        {isClient && (
+          <OptionSelect id='uploader' value={selectedOption} onChange={handleOptionChange}>
+            <OptionOption value="">Select Option</OptionOption>
+            <OptionOption value="passport">Passport</OptionOption>
+            <OptionOption value="portrait">Portrait</OptionOption>
+          </OptionSelect>
+        )}
+        <input type="file" onChange={handleImageUpload} style={{ display: 'none' }} id="uploadInput" accept="image/*" />
+        <SelectImageButton htmlFor="uploadInput">Select Image</SelectImageButton>
+        {uploadedImage && (
+          <ImageContainer>
+            <UploadedImage src={uploadedImage} alt="Uploaded" />
+          </ImageContainer>
+        )}
+        <p>Alumni ID: {id}</p>
+        <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+          <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="success">
+            {snackbarMessage}
+          </MuiAlert>
+        </Snackbar>
+        {/* <UploadButton onClick={handleUpload}>Upload</UploadButton> */}
+      </Container>
+    </>
   );
 };
 

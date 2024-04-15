@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styled from '@emotion/styled';
 import { account, databases, Query } from "./appwrite/appwrite";
+import Head from 'next/head';
 
 const Container = styled.div`
   max-width: 800px;
@@ -124,49 +125,52 @@ const IndexPage = () => {
   };
 
   return (
-    <Container>
-      <h1 style={{ marginBottom: '20px' }}>Alumni Data Table</h1>
-      <Input
-        type="text"
-        placeholder="Search by Name, Reg Number, Email"
-        value={searchTerm}
-        onChange={handleSearch}
-      />
-      <Button onClick={handlePrint} style={{ marginLeft: '20px' }}>
-        Print List
-      </Button>
-      <Link href="/record">
-        <Button style={{ marginLeft: '20px' }}>
-          View Records By Faculty/Department
+    <>
+      <Heading>AE-FUNAI Alumni Records</Heading>
+      <Container>
+        <h1 style={{ marginBottom: '20px' }}>Alumni Data Table</h1>
+        <Input
+          type="text"
+          placeholder="Search by Name, Reg Number, Email"
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+        <Button onClick={handlePrint} style={{ marginLeft: '20px' }}>
+          Print List
         </Button>
-      </Link>
-      <Table>
-        <thead>
-          <tr>
-            <TableHeader>Full Name</TableHeader>
-            <TableHeader>Reg Number</TableHeader>
-            <TableHeader>Email</TableHeader>
-            {/* <TableHeader>Department</TableHeader> */}
-            <TableHeader>Actions</TableHeader>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredStudents.map((student) => (
-            <tr key={student.id}>
-              <TableCell>{student.name}</TableCell>
-              <TableCell>{student.regNumber}</TableCell>
-              <TableCell>{student.email}</TableCell>
-              {/* <TableCell>{student.department}</TableCell> */}
-              <TableCell>
-                <Link href={`/user/${student.userId}`}>
-                  <Button>View Details</Button>
-                </Link>
-              </TableCell>
+        <Link href="/record">
+          <Button style={{ marginLeft: '20px' }}>
+            View Records By Faculty/Department
+          </Button>
+        </Link>
+        <Table>
+          <thead>
+            <tr>
+              <TableHeader>Full Name</TableHeader>
+              <TableHeader>Reg Number</TableHeader>
+              <TableHeader>Email</TableHeader>
+              {/* <TableHeader>Department</TableHeader> */}
+              <TableHeader>Actions</TableHeader>
             </tr>
-          ))}
-        </tbody>
-      </Table>
-    </Container>
+          </thead>
+          <tbody>
+            {filteredStudents.map((student) => (
+              <tr key={student.id}>
+                <TableCell>{student.name}</TableCell>
+                <TableCell>{student.regNumber}</TableCell>
+                <TableCell>{student.email}</TableCell>
+                {/* <TableCell>{student.department}</TableCell> */}
+                <TableCell>
+                  <Link href={`/user/${student.userId}`}>
+                    <Button>View Details</Button>
+                  </Link>
+                </TableCell>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </Container>
+    </>
   );
 };
 

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styled from '@emotion/styled';
 import { databases, Query } from "../appwrite/appwrite";
+import Head from 'next/head';
 
 const Container = styled.div`
   max-width: 800px;
@@ -101,96 +102,101 @@ const UserPage = () => {
   }
 
   return (
-    userData.completed?
-    <Container>
-      <Heading>AE-FUNAI Alumni Information</Heading>
-      <UserImage src={passport} alt="Passport" />
-      <UserData>
-        <UserDetail>
-          <strong>Alumni ID:</strong> {id}
-        </UserDetail>
-        <UserDetail>
-          <strong>Full Name:</strong> {userData.fullName}
-        </UserDetail>
-        <UserDetail>
-          <strong>Reg Number:</strong> {userData.regNumber}
-        </UserDetail>
-        <UserDetail>
-          <strong>Faculty:</strong> {userData.faculty}
-        </UserDetail>
-        <UserDetail>
-          <strong>Department:</strong> {userData.department}
-        </UserDetail>
-        <UserDetail>
-          <strong>L.G.A:</strong> {userData.lga}
-        </UserDetail>
-        <UserDetail>
-          <strong>State of Origin:</strong> {userData.stateOfOrigin}
-        </UserDetail>
-        <UserDetail>
-          <strong>Nationality:</strong> {userData.nationality}
-        </UserDetail>
-        <UserDetail>
-          <strong>Contact Address:</strong> {userData.contactAddress}
-        </UserDetail>
-        <UserDetail>
-          <strong>Permanent Address:</strong> {userData.permAddress}
-        </UserDetail>
-        <UserDetail>
-          <strong>Phone Number:</strong> {userData.phoneNumber}
-        </UserDetail>
-        <UserDetail>
-          <strong>Year of Entry:</strong> {userData.yearOfEntry}
-        </UserDetail>
-        <UserDetail>
-          <strong>Year of Graduation:</strong> {userData.yearOfGraduation}
-        </UserDetail>
-        <UserDetail>
-          <strong>Degree:</strong> {userData.degree}
-        </UserDetail>
-        <UserDetail>
-          <strong>Diploma:</strong> {userData.diploma}
-        </UserDetail>
-        <UserDetail>
-          <strong>Certificate:</strong> {userData.certificate}
-        </UserDetail>
-        <UserDetail>
-          <strong>Present Employer:</strong> {userData.presentEmployer}
-        </UserDetail>
-        <UserDetail>
-          <strong>Present Post:</strong> {userData.presentPost}
-        </UserDetail>
-        <UserDetail>
-          <strong>Member of Professional Body:</strong> {userData.memOfProfBodies}
-        </UserDetail>
-        <UserDetail>
-          <strong>Student Activities:</strong> {userData.studentActivities}
-        </UserDetail>
-        <UserDetail>
-          <strong>Hobbies:</strong> {userData.hobbies}
-        </UserDetail>
-        <UserDetail>
-          <strong>Additional Information:</strong> {userData.anyOtherRelevantInfo}
-        </UserDetail>
-        <UserDetail>
-          <strong>Email:</strong> {userData.email}
-        </UserDetail>
-        {/* Add more user details as needed */}
-      </UserData>
-      <PrintButton onClick={handlePrint}>Print</PrintButton>
-      {userData.portrait && (
+    <>
+      <Head>
+        <title>AE-FUNAI Alumni Information</title>
+      </Head>
+      {userData.completed?
+      <Container>
+        <Heading>AE-FUNAI Alumni Information</Heading>
+        <UserImage src={passport} alt="Passport" />
+        <UserData>
           <UserDetail>
-            <strong>Portrait:</strong> 
-            <Link target='_blank' href={`https://cloud.appwrite.io/v1/storage/buckets/661908b8a46d76ab984a/files/${userData.portrait}/view?project=65cdbc3b42063b794d4e&mode=admin`} passHref>
-                View Portrait
-            </Link>
+            <strong>Alumni ID:</strong> {id}
           </UserDetail>
+          <UserDetail>
+            <strong>Full Name:</strong> {userData.fullName}
+          </UserDetail>
+          <UserDetail>
+            <strong>Reg Number:</strong> {userData.regNumber}
+          </UserDetail>
+          <UserDetail>
+            <strong>Faculty:</strong> {userData.faculty}
+          </UserDetail>
+          <UserDetail>
+            <strong>Department:</strong> {userData.department}
+          </UserDetail>
+          <UserDetail>
+            <strong>L.G.A:</strong> {userData.lga}
+          </UserDetail>
+          <UserDetail>
+            <strong>State of Origin:</strong> {userData.stateOfOrigin}
+          </UserDetail>
+          <UserDetail>
+            <strong>Nationality:</strong> {userData.nationality}
+          </UserDetail>
+          <UserDetail>
+            <strong>Contact Address:</strong> {userData.contactAddress}
+          </UserDetail>
+          <UserDetail>
+            <strong>Permanent Address:</strong> {userData.permAddress}
+          </UserDetail>
+          <UserDetail>
+            <strong>Phone Number:</strong> {userData.phoneNumber}
+          </UserDetail>
+          <UserDetail>
+            <strong>Year of Entry:</strong> {userData.yearOfEntry}
+          </UserDetail>
+          <UserDetail>
+            <strong>Year of Graduation:</strong> {userData.yearOfGraduation}
+          </UserDetail>
+          <UserDetail>
+            <strong>Degree:</strong> {userData.degree}
+          </UserDetail>
+          <UserDetail>
+            <strong>Diploma:</strong> {userData.diploma}
+          </UserDetail>
+          <UserDetail>
+            <strong>Certificate:</strong> {userData.certificate}
+          </UserDetail>
+          <UserDetail>
+            <strong>Present Employer:</strong> {userData.presentEmployer}
+          </UserDetail>
+          <UserDetail>
+            <strong>Present Post:</strong> {userData.presentPost}
+          </UserDetail>
+          <UserDetail>
+            <strong>Member of Professional Body:</strong> {userData.memOfProfBodies}
+          </UserDetail>
+          <UserDetail>
+            <strong>Student Activities:</strong> {userData.studentActivities}
+          </UserDetail>
+          <UserDetail>
+            <strong>Hobbies:</strong> {userData.hobbies}
+          </UserDetail>
+          <UserDetail>
+            <strong>Additional Information:</strong> {userData.anyOtherRelevantInfo}
+          </UserDetail>
+          <UserDetail>
+            <strong>Email:</strong> {userData.email}
+          </UserDetail>
+          {/* Add more user details as needed */}
+        </UserData>
+        <PrintButton onClick={handlePrint}>Print</PrintButton>
+        
+        {userData.portrait && (
+          <PrintButton>
+            <Link target='_blank' href={`https://cloud.appwrite.io/v1/storage/buckets/661908b8a46d76ab984a/files/${userData.portrait}/view?project=65cdbc3b42063b794d4e&mode=admin`} passHref>
+              View Portrait
+            </Link>
+          </PrintButton>
         )}
-    </Container> :
-    <Container>
-      <Heading>Alumni Haven't Updated their Data</Heading>
-    </Container>
-  );
+      </Container> :
+      <Container>
+        <Heading>Alumni Haven't Updated their Data</Heading>
+      </Container>}
+    </>
+  )
 };
 
 export default UserPage;
