@@ -138,7 +138,7 @@ const Upload = () => {
         ).then(async (res) => {
           console.log(`Alumni data retrieved - ${res.documents[0].$id}`);
           setSnackbarMessage('Updating alumni Record...');
-          const docID = res.documents[0].$id.toString();
+          const docID = res.documents[0].$id;
           await databases.updateDocument(
             databaseID,
             alumniDataCollection,
