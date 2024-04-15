@@ -126,7 +126,9 @@ const IndexPage = () => {
 
   return (
     <>
-      <Heading>AE-FUNAI Alumni Records</Heading>
+      <Head>
+        <title>AE-FUNAI Alumni Records</title>
+      </Head>
       <Container>
         <h1 style={{ marginBottom: '20px' }}>Alumni Data Table</h1>
         <Input

@@ -127,12 +127,14 @@ const IndexPage = () => {
 
   return (
     <>
-      <Heading>AE-FUNAI Alumni Records</Heading>
+      <Head>
+        <title>AE-FUNAI Alumni Records</title>
+      </Head>
       <Container>
         <h1 style={{ marginBottom: '20px' }}>Student Data</h1>
         <Input
           type="text"
-          placeholder="Search by Name, Reg Number, Faculty, or Department"
+          placeholder="Search by Faculty, Department, Name, or Reg Number"
           value={searchTerm}
           onChange={handleSearch}
         />

@@ -113,6 +113,7 @@ const Upload = () => {
   };
 
   const uploadFileAndUpdateDocument = async (fieldName, file, successMessage) => {
+    setSnackbarMessage('Upload in Progress...');
     await storage.createFile(
       bucketID,
       ID.unique(),
@@ -120,6 +121,7 @@ const Upload = () => {
     ).then(async (response) => {
       setPhoto(response.$id)
       console.log("File created in bucket");
+      setSnackbarMessage('File created in Storage Bucket');
       await databases.listDocuments(
         databaseID,
         userDataCollection,
@@ -135,6 +137,7 @@ const Upload = () => {
           ]
         ).then(async (res) => {
           console.log(`Alumni data retrieved - ${res.documents[0].$id}`);
+          setSnackbarMessage('Updating alumni Record...');
           const docID = res.documents[0].$id.toString();
           await databases.updateDocument(
             databaseID,
