@@ -67,6 +67,7 @@ const Upload = () => {
   const { id } = router.query;
   const [selectedOption, setSelectedOption] = useState('');
   const [photo, setPhoto] = useState('');
+  const [docID, setDocId] = useState('');
   const [uploadedImage, setUploadedImage] = useState(null);
   const [isClient, setIsClient] = useState(false); // Track if the component is rendered on the client
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -105,15 +106,14 @@ const Upload = () => {
   };
 
   const handlePassportUpload = async (file) => {
-    await uploadFileAndUpdateDocument('passport_photo', file, 'Passport photo uploaded successfully');
+    await uploadFileAndUpdateDocument(file, 'Passport photo uploaded successfully');
   };
 
   const handlePortraitUpload = async (file) => {
-    await uploadFileAndUpdateDocument('portrait', file, 'Portrait uploaded successfully');
+    await uploadFileAndUpdateDocument(file, 'Portrait uploaded successfully');
   };
 
-  const uploadFileAndUpdateDocument = async (fieldName, file, successMessage) => {
-    setSnackbarMessage('Upload in Progress...');
+  const uploadFileAndUpdateDocument = async (file, successMessage) => {
     await storage.createFile(
       bucketID,
       ID.unique(),
@@ -121,7 +121,6 @@ const Upload = () => {
     ).then(async (response) => {
       setPhoto(response.$id)
       console.log("File created in bucket");
-      setSnackbarMessage('File created in Storage Bucket');
       await databases.listDocuments(
         databaseID,
         userDataCollection,
@@ -137,19 +136,32 @@ const Upload = () => {
           ]
         ).then(async (res) => {
           console.log(`Alumni data retrieved - ${res.documents[0].$id}`);
-          setSnackbarMessage('Updating alumni Record...');
-          const docID = res.documents[0].$id;
+          setDocId(res.documents[0].$id);
+          var pass = {passport_photo : photo, portrait : res.documents[0].portrait,}
+          var port = {passport_photo : res.documents[0].passport_photo, portrait : photo,}
+          var data = selectedOption == "portrait" ? port : pass ;
+
+          selectedOption == "passport" ?
           await databases.updateDocument(
             databaseID,
             alumniDataCollection,
             docID,
-            {
-              [fieldName]: photo,
-            }
-          ).then(() => {
-            console.log("Document Updated")
+            data
+          ).then((v) => {
+            console.log("Document Updated - Passport ", v.passport_photo)
             // router.push(`../user/${id}`);
-          });
+          })
+          :
+          await databases.updateDocument(
+            databaseID,
+            alumniDataCollection,
+            docID,
+            data
+          ).then((v) => {
+            console.log("Document Updated - Portrait", v.portrait)
+            // router.push(`../user/${id}`);
+          })
+
         });
       });
       setSnackbarMessage(successMessage);
@@ -180,6 +192,7 @@ const Upload = () => {
             <OptionOption value="portrait">Portrait</OptionOption>
           </OptionSelect>
         )}
+        <h1>Allowed Extensions(PNG, JPEG, JPG) and files size must be less than 5MB</h1>
         <input type="file" onChange={handleImageUpload} style={{ display: 'none' }} id="uploadInput" accept="image/*" />
         <SelectImageButton htmlFor="uploadInput">Select Image</SelectImageButton>
         {uploadedImage && (
