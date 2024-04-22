@@ -141,9 +141,14 @@ const IndexPage = () => {
         <Button onClick={handlePrint} style={{ marginLeft: '20px' }}>
           Print List
         </Button>
-        <Link href="../">
+        <Link href="../alumni">
           <Button style={{ marginLeft: '20px' }}>
-            Back to Records with View Details Option
+            Add New Alumni
+          </Button>
+        </Link>
+        <Link href="../">
+          <Button style={{ marginLeft: '20px', marginTop: '20px' }}>
+            View Records with View Details Option
           </Button>
         </Link>
         <Table>
