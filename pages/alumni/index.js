@@ -20,6 +20,25 @@ const AlumniPage = () => {
   let userDataCollection = "65cdbce6a5676da43af8";
   let alumniDataCollection = "65d1c871ec47230031e2";
 
+  function generateAlumniID() {
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const alphanumeric = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  // Generate a random uppercase letter
+  const randomLetter = letters.charAt(Math.floor(Math.random() * letters.length));
+
+  // Generate a random 5-digit alphanumeric string
+  let randomAlphanumeric = '';
+  for (let i = 0; i < 5; i++) {
+    randomAlphanumeric += alphanumeric.charAt(Math.floor(Math.random() * alphanumeric.length));
+  }
+
+  // Combine the parts to form the alumni ID
+  const alumniID = `AEFUNAIAA/EAGLE/${randomLetter}/${randomAlphanumeric}`;
+
+  return alumniID;
+}
+
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -36,11 +55,14 @@ const AlumniPage = () => {
       // Now jsonData contains the parsed Excel data in JSON format
       console.log('Parsed Excel data:', jsonData);
       jsonData.forEach(async (value, index)=>{
+        const uniqueAlumniID = generateAlumniID();
+        console.log(uniqueAlumniID);
         var obj = {
             regNumber: value[0],
             fullName: value[1],
             faculty: value[2],
             department: value[3],
+            alumniID: uniqueAlumniID,
         }
 
         await databases.createDocument(

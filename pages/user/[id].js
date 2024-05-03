@@ -112,7 +112,7 @@ const UserPage = () => {
         <UserImage src={passport} alt="Passport" />
         <UserData>
           <UserDetail>
-            <strong>Alumni ID:</strong> {id}
+            <strong>Alumni ID:</strong> {userData.alumniID}
           </UserDetail>
           <UserDetail>
             <strong>Full Name:</strong> {userData.fullName}

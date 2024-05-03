@@ -200,7 +200,7 @@ const Upload = () => {
             <UploadedImage src={uploadedImage} alt="Uploaded" />
           </ImageContainer>
         )}
-        <p>Alumni ID: {id}</p>
+        <p>Record ID: {id}</p>
         <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
           <MuiAlert elevation={6} variant="filled" onClose={handleCloseSnackbar} severity="success">
             {snackbarMessage}
